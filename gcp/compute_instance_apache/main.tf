@@ -24,7 +24,12 @@ resource "google_compute_instance" "vm_instance_1" {
 
   network_interface {
     network = google_compute_network.vpc_network.self_link
+    access_config {
+      // Ephemeral IP
+    }
   }
+
+  metadata_startup_script = var.startup_script_apache
 
 }
 
@@ -55,4 +60,3 @@ resource "google_compute_firewall" "allow_http_https" {
   }
   target_tags = ["web"]
 }
-
