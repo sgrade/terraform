@@ -13,7 +13,7 @@ resource "google_compute_network" "vpc_network" {
 
 resource "google_compute_firewall" "default" {
   name    = "terraform-firewall"
-  network = google_compute_network.vpc_network.name
+  network = google_compute_network.vpc_network.self_link
 
   allow {
     protocol = "icmp"
@@ -27,46 +27,23 @@ resource "google_compute_firewall" "default" {
   target_tags = ["web"]
 }
 
-resource "google_compute_instance" "vm_instance_1" {
-  name         = "terraform-instance-1"
-  machine_type = var.machine_types[var.environment]
-  tags         = ["web"]
-
-  boot_disk {
-    initialize_params {
-      image = "debian-cloud/debian-10"
-    }
-  }
-
-  network_interface {
-    network = google_compute_network.vpc_network.self_link
-  }
-
+module "tf_instance_1" {
+  source              = "./modules/compute_instance_apache"
+  instance_name       = "tf-instance-1"
+  vpc_network = google_compute_network.vpc_network.self_link
 }
 
-resource "google_compute_instance" "vm_instance_2" {
-  name         = "terraform-instance-2"
-  machine_type = var.machine_types[var.environment]
-  tags         = ["web"]
-
-  boot_disk {
-    initialize_params {
-      image = "debian-cloud/debian-10"
-    }
-  }
-
-  network_interface {
-    network = google_compute_network.vpc_network.self_link
-  }
-
+module "tf_instance_2" {
+  source              = "./modules/compute_instance_apache"
+  instance_name       = "tf-instance-2"
+  vpc_network = google_compute_network.vpc_network.self_link
 }
-
 
 resource "google_compute_instance_group" "terraform_group" {
   name = "terraform-group"
   network = google_compute_network.vpc_network.self_link
   instances = [
-    google_compute_instance.vm_instance_1.self_link,
-    google_compute_instance.vm_instance_2.self_link, 
+    module.tf_instance_1.self_link,
+    module.tf_instance_2.self_link, 
     ]
 }
