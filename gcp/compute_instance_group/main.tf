@@ -45,5 +45,13 @@ resource "google_compute_instance_group" "terraform_group" {
   instances = [
     module.tf_instance_1.self_link,
     module.tf_instance_2.self_link, 
-    ]
+  ]
+  named_port {
+    name = "http"
+    port = "80"
+  }
+  named_port {
+    name = "https"
+    port = "443"
+  }
 }
