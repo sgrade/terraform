@@ -1,14 +1,9 @@
-module "tf_backend" {
-    source = "./modules/backend"
-}
-
 module "gce-lb-http" {
   source            = "GoogleCloudPlatform/lb-http/google"
   version           = "~> 3.1"
 
   name              = "group-http-lb"
   project           = var.project
-  # target_tags       = [module.mig1.target_tags, module.mig2.target_tags]
   target_tags       = ["web"]
   backends = {
     default = {
@@ -41,8 +36,7 @@ module "gce-lb-http" {
       groups = [
         {
           # Each node pool instance group should be added to the backend.
-          # group                        = var.backend
-          group                        = module.tf_backend.backend
+          group                        = module.mig1.instance_group
           balancing_mode               = null
           capacity_scaler              = null
           description                  = null
