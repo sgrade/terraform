@@ -15,13 +15,19 @@ variable "environment" {
   default = "dev"
 }
 
-variable "machine_types" {
+# variable "instance_name" {}
+
+variable "instance_types" {
   type    = map
   default = {
     dev  = "f1-micro"
     test = "n1-highcpu-32"
     prod = "n1-highcpu-32"
   }
+}
+
+variable "instance_image" {
+  default = "debian-cloud/debian-10"
 }
 
 variable "startup_script_apache" {
