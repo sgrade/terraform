@@ -1,3 +1,4 @@
+// Test host in the sandbox VPC
 data "aws_ami" "ubuntu" {
   most_recent = true
 
@@ -16,7 +17,7 @@ data "aws_ami" "ubuntu" {
   tags = var.resource_tags
 }
 
-resource "aws_instance" "sandbox-host" {
+resource "aws_instance" "sandbox_host" {
   ami               = data.aws_ami.ubuntu.id
   instance_type     = var.ec2_instance_type
   subnet_id         = aws_subnet.sandbox_subnet_1.id
@@ -24,3 +25,4 @@ resource "aws_instance" "sandbox-host" {
 
   tags              = var.resource_tags
 }
+
