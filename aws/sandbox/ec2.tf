@@ -25,4 +25,3 @@ resource "aws_instance" "sandbox_host" {
 
   tags              = var.resource_tags
 }
-
