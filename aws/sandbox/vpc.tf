@@ -16,10 +16,13 @@ resource "aws_subnet" "sandbox_subnet_1" {
   tags = var.resource_tags
 }
 
+/*
+// Subnets that are not explicitely associated with some subnet will be associated with main route table
 resource "aws_route_table_association" "sandbox_subnet_1" {
   subnet_id      = aws_subnet.sandbox_subnet_1.id
   route_table_id = aws_vpc.sandbox_vpc.main_route_table_id
 }
+*/
 
 data "aws_vpc" "peer_vpc" {
   id = var.peer_vpc_id
