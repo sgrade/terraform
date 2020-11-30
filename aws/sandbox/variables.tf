@@ -7,7 +7,8 @@ variable "resource_tags" {
   type        = map(string)
   default     = {
     project     = "default",
-    environment = "dev"
+    environment = "dev",
+    terraform   = "true"
   }
 }
 
