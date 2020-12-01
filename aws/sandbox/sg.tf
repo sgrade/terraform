@@ -28,8 +28,9 @@ resource "aws_security_group_rule" "allow_ssh_from_peer_vpc" {
 resource "aws_security_group_rule" "allow_icmp_from_peer_vpc" {
   description       = "Peer VPC to Sandbox VPC"
   type              = "ingress"
-  from_port         = 0
-  to_port           = 0
+  // Echo request
+  from_port         = 8
+  to_port           = -1
   protocol          = "icmp"
   cidr_blocks       = [data.aws_vpc.peer_vpc.cidr_block]
   security_group_id = aws_security_group.sandbox_sg.id
@@ -48,8 +49,9 @@ data "aws_security_group" "peer_vpc_default_sg" {
 resource "aws_security_group_rule" "allow_icmp_from_sandbox_vpc" {
   description       = "Sandbox VPC to Peer VPC"
   type              = "ingress"
-  from_port         = 0
-  to_port           = 0
+  // Echo request
+  from_port         = 8
+  to_port           = -1
   protocol          = "icmp"
   cidr_blocks       = [aws_vpc.sandbox_vpc.cidr_block]
   // TODO: replace default security group with bastion host security group
