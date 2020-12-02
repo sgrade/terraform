@@ -88,3 +88,9 @@ variable "private_subnet_cidr_blocks" {
     "10.0.108.0/24",
   ]
 }
+
+variable "key_name" {
+  description = "The key name of the Key Pair to use for the instance"
+  type        = string
+  default     = "default-key"
+}

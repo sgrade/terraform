@@ -18,10 +18,11 @@ data "aws_ami" "ubuntu" {
 }
 
 resource "aws_instance" "sandbox_host" {
-  ami               = data.aws_ami.ubuntu.id
-  instance_type     = var.ec2_instance_type
-  subnet_id         = aws_subnet.sandbox_subnet_1.id
-  vpc_security_group_ids = [aws_security_group.sandbox_sg.id]
+  ami                     = data.aws_ami.ubuntu.id
+  instance_type           = var.ec2_instance_type
+  subnet_id               = aws_subnet.sandbox_private_subnet_1.id
+  vpc_security_group_ids  = [aws_security_group.sandbox_sg.id]
+  key_name                = var.key_name
 
   tags              = var.resource_tags
 }

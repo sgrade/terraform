@@ -7,7 +7,7 @@ resource "aws_vpc" "sandbox_vpc" {
   tags = var.resource_tags
 }
 
-resource "aws_subnet" "sandbox_subnet_1" {
+resource "aws_subnet" "sandbox_private_subnet_1" {
   vpc_id                  = aws_vpc.sandbox_vpc.id
   cidr_block              = "10.0.1.0/24"
   // False, so, instances are not accessible from Internet
@@ -18,8 +18,8 @@ resource "aws_subnet" "sandbox_subnet_1" {
 
 /*
 // Subnets that are not explicitely associated with some subnet will be associated with main route table
-resource "aws_route_table_association" "sandbox_subnet_1" {
-  subnet_id      = aws_subnet.sandbox_subnet_1.id
+resource "aws_route_table_association" "sandbox_private_subnet_1" {
+  subnet_id      = aws_subnet.sandbox_private_subnet_1.id
   route_table_id = aws_vpc.sandbox_vpc.main_route_table_id
 }
 */
