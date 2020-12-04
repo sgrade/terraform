@@ -79,3 +79,10 @@ resource "aws_route" "sandbox_main_rt_to_nat" {
   route_table_id            = aws_vpc.sandbox_vpc.main_route_table_id
   instance_id                = aws_instance.sandbox_nat.id
 }
+
+// So SSH from the peer VPC works
+resource "aws_route" "sandbox_public_to_peer_vpc" {
+  route_table_id            = aws_route_table.sandbox_public.id
+  destination_cidr_block    = data.aws_vpc.peer.cidr_block
+  vpc_peering_connection_id = aws_vpc_peering_connection.sandbox_peering.id
+}
