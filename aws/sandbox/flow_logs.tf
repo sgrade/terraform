@@ -6,13 +6,13 @@ resource "aws_flow_log" "sandbox_vpc_flow_log" {
 }
 
 resource "aws_cloudwatch_log_group" "sandbox_vpc_flow_logs" {
-  name              = "polaris_sandbox_vpc_flow_logs"
+  name              = "generic_sandbox_vpc_flow_logs"
   // TODO: change retention period, when move to production
   retention_in_days = 7
 }
 
 resource "aws_iam_role" "sandbox_vpc_flow_logs" {
-  name = "polaris_sandbox_vpc_flow_logs"
+  name = "generic_sandbox_vpc_flow_logs"
 
   assume_role_policy = <<EOF
 {
@@ -32,7 +32,7 @@ EOF
 }
 
 resource "aws_iam_role_policy" "sandbox_vpc_flow_logs" {
-  name = "polaris_sandbox_vpc_flow_logs"
+  name = "generic_sandbox_vpc_flow_logs"
   role = aws_iam_role.sandbox_vpc_flow_logs.id
 
   policy = <<EOF
