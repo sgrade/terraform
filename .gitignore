@@ -33,3 +33,4 @@ override.tf.json
 
 # added manually
 *terraform_service_account.json
+.terraform.lock.hcl
