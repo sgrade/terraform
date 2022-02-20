@@ -1,4 +1,4 @@
-// Instances
+// EC2 Instances
 
 // Debian
 // https://cloud.debian.org/images/cloud/

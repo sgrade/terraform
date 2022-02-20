@@ -1,3 +1,5 @@
+// Security Groups
+
 resource "aws_security_group" "sandbox_sg" {
   name        = "sandbox-sg"
   description = "Sandbox security group"

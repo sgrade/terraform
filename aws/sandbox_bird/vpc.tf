@@ -1,3 +1,5 @@
+// VPC, subnets and network-related resources
+
 resource "aws_vpc" "sandbox_vpc" {
   
   cidr_block            = var.vpc_cidr_block

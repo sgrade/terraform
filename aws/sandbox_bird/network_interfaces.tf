@@ -1,6 +1,5 @@
 // Network interfaces and their attachments to the instances
 
-
 // +++++++++++++++++++
 // Subnet between 1 and 2
 
