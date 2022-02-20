@@ -1,4 +1,5 @@
 resource "aws_vpc" "sandbox_vpc" {
+  
   cidr_block            = var.vpc_cidr_block
   instance_tenancy      = "default"
   // True so, instances are accessible from Internet
@@ -7,14 +8,52 @@ resource "aws_vpc" "sandbox_vpc" {
   tags = var.resource_tags
 }
 
-// +++++++++++++++++++
-// Private networks
+# Declare the data source
+data "aws_availability_zones" "available" {
+  state = "available"
 
-resource "aws_subnet" "sandbox_private_subnet_1" {
+  // Only Availability Zones (no Local Zones):
+  filter {
+    name   = "opt-in-status"
+    values = ["opt-in-not-required"]
+  }
+}
+
+// +++++++++++++++++++
+// Private subnets
+
+// Between host 1 and 2
+resource "aws_subnet" "sandbox_private_subnet_12" {
   vpc_id                  = aws_vpc.sandbox_vpc.id
-  cidr_block              = var.private_subnet_cidr_blocks[0]
+  cidr_block              = cidrsubnet(aws_vpc.sandbox_vpc.cidr_block, 8, 12)
   // False, so instances are not accessible from Internet
   map_public_ip_on_launch = false
+
+  availability_zone = data.aws_availability_zones.available.names[0]
+
+  tags = var.resource_tags
+}
+
+// Between host 1 and 3
+resource "aws_subnet" "sandbox_private_subnet_13" {
+  vpc_id                  = aws_vpc.sandbox_vpc.id
+  cidr_block              = cidrsubnet(aws_vpc.sandbox_vpc.cidr_block, 8, 13)
+  // False, so instances are not accessible from Internet
+  map_public_ip_on_launch = false
+
+  availability_zone = data.aws_availability_zones.available.names[0]
+
+  tags = var.resource_tags
+}
+
+// Between host 2 and 3
+resource "aws_subnet" "sandbox_private_subnet_23" {
+  vpc_id                  = aws_vpc.sandbox_vpc.id
+  cidr_block              = cidrsubnet(aws_vpc.sandbox_vpc.cidr_block, 8, 23)
+  // False, so instances are not accessible from Internet
+  map_public_ip_on_launch = false
+
+  availability_zone = data.aws_availability_zones.available.names[0]
 
   tags = var.resource_tags
 }
@@ -29,9 +68,12 @@ resource "aws_internet_gateway" "sandbox_gw" {
 
 resource "aws_subnet" "sandbox_public_subnet_1" {
   vpc_id                  = aws_vpc.sandbox_vpc.id
-  cidr_block              = var.public_subnet_cidr_blocks[0]
+  cidr_block              = cidrsubnet(aws_vpc.sandbox_vpc.cidr_block, 8, 0)
   // True, so instances are accessible from Internet
   map_public_ip_on_launch = true
+
+  availability_zone = data.aws_availability_zones.available.names[0]
+
   tags = var.resource_tags
 }
 
@@ -52,8 +94,10 @@ resource "aws_route" "sandbox_public_subnet_to_internet" {
   gateway_id                = aws_internet_gateway.sandbox_gw.id
 }
 
-resource "aws_route" "sandbox_main_rt_to_debian1" {
+/*
+resource "aws_route" "sandbox_main_rt_to_instance" {
   destination_cidr_block    = "0.0.0.0/0"
   route_table_id            = aws_vpc.sandbox_vpc.main_route_table_id
-  instance_id                = aws_instance.debian1.id
+  // instance_id                = aws_instance.debian1.id
 }
+*/
