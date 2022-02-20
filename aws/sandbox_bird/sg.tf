@@ -21,7 +21,6 @@ resource "aws_security_group_rule" "allow_ssh_ec2_instance_connect" {
   from_port         = 22
   to_port           = 22
   protocol          = "tcp"
-  // cidr_blocks       = ["3.120.181.40/29"]
   cidr_blocks       = ["0.0.0.0/0"]
   security_group_id = aws_security_group.sandbox_sg.id
 }
