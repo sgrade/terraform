@@ -14,10 +14,26 @@ output "instance_public_ips" {
   })
 }
 
+/*
+// Ansible inventory in yaml format - needs some extra work
 resource "local_file" "hosts" {
-    content     = yamlencode(
+    content     = replace(
+    yamlencode(
+      tomap({
+      "routers" = [for inst in aws_instance.router:
+        inst.public_dns]
+      })
+    ),
+    "\"", "")
+    filename = "${path.module}/hosts.yml"
+}
+*/
+
+// Ansible inventory in simple format. All hosts are in "ungrouped" default group
+resource "local_file" "hosts" {
+    content     = join("\n",
       [for inst in aws_instance.router:
         inst.public_dns]
     )
-    filename = "${path.module}/hosts.yml"
+    filename = "${path.module}/hosts"
 }

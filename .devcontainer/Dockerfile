@@ -11,7 +11,7 @@ FROM mcr.microsoft.com/vscode/devcontainers/base:0-${VARIANT}
 ###
 # Extra configuration in addition to what was defined in the Microsoft template above
 RUN apt-get update && export DEBIAN_FRONTEND=noninteractive \
-    && apt-get -y install --no-install-recommends curl unzip
+    && apt-get -y install --no-install-recommends curl unzip ansible
 
 RUN curl https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip -o awscliv2.zip \
   && unzip awscliv2.zip \
