@@ -18,6 +18,10 @@ data "aws_ami" "debian-11-amd64" {
 }
 
 // Virtual Machines to host BIRD
+data "template_file" "user_data" {
+  template = file("../scripts/bird.yaml")
+}
+
 resource "aws_instance" "router" {
   count                   = var.instance_count
   ami                     = data.aws_ami.debian-11-amd64.id
@@ -25,6 +29,8 @@ resource "aws_instance" "router" {
   subnet_id               = aws_subnet.sandbox_public_subnet_1.id
   vpc_security_group_ids  = [aws_security_group.sandbox_sg.id]
   key_name                = var.key_name
+
+  user_data               = data.template_file.user_data.rendered
 
   tags = merge(
     {
