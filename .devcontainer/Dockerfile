@@ -11,7 +11,13 @@ FROM mcr.microsoft.com/vscode/devcontainers/base:0-${VARIANT}
 ###
 # Extra configuration in addition to what was defined in the Microsoft template above
 RUN apt-get update && export DEBIAN_FRONTEND=noninteractive \
-    && apt-get -y install --no-install-recommends curl unzip ansible
+    && apt-get -y install --no-install-recommends curl unzip
+
+# Ansible - https://docs.ansible.com/ansible/latest/installation_guide/intro_installation.html#installing-ansible-with-pip
+RUN apt-get -y install python3-distutils
+RUN curl https://bootstrap.pypa.io/get-pip.py -o get-pip.py
+RUN python3 get-pip.py
+RUN python3 -m pip install ansible
 
 RUN curl https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip -o awscliv2.zip \
   && unzip awscliv2.zip \
