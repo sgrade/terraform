@@ -1,0 +1,75 @@
+---
+- name: Install BIRD
+  hosts: all
+  become: yes
+  
+  tasks:
+
+  - name: Apt upgrade
+    apt:
+      upgrade: full
+  
+  - name: Install BIRD dependencies
+    apt:
+      name: 
+        - build-essential
+        - flex
+        - bison
+        - libncurses-dev
+        - libreadline-dev
+      state: present
+
+  - name: Create a directory if it does not exist
+    ansible.builtin.file:
+      path: /tmp/bird
+      state: directory
+      mode: '0755'
+  
+  - name: Download BIRD source code and extract to /tmp/bird
+    ansible.builtin.unarchive:
+      src: https://bird.network.cz/download/bird-2.0.9.tar.gz
+      dest: /tmp/bird
+      remote_src: yes
+      list_files: true
+    register: xxx
+  
+  - name: Get build dir
+    set_fact:
+      build_dir: "{{ xxx.files[0][:-1] }}"
+  
+  - name: Print build dir
+    ansible.builtin.debug:
+      var: build_dir
+  
+  - name: Running ./configure for BIRD
+    command: '"{{ item }}" chdir=/tmp/bird/{{ build_dir }}'
+    with_items:
+      - ./configure
+
+  - name: Wait until the Makefile is present before continuing
+    wait_for:
+      path: /tmp/bird/{{ build_dir }}/Makefile
+  
+  - name: Build BIRD
+    make:
+      chdir: /tmp/bird/{{ build_dir }}
+
+  - name: Make sure that BIRD service is started
+    ansible.builtin.service:
+      name: bird
+      state: started
+  
+  - name: Check if /etc/bird exists
+    stat:
+      path: "/etc/bird"
+    register: etc_bird
+  
+  # - name: Print facts
+    # ansible.builtin.debug:
+      # var: etc_bird
+
+  - name: Fail if /etc/bird does not exist
+    fail:
+      msg: "/etc/bird doesn't exist"
+    when: 
+      - not etc_bird.stat.exists

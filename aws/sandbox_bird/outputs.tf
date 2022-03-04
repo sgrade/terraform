@@ -16,6 +16,7 @@ output "instance_public_ips" {
 
 /*
 // Ansible inventory in yaml format - needs some extra work
+// Allows to add variables
 resource "local_file" "hosts" {
     content     = replace(
     yamlencode(
@@ -35,5 +36,5 @@ resource "local_file" "hosts" {
       [for inst in aws_instance.router:
         inst.public_dns]
     )
-    filename = "${path.module}/hosts"
+    filename = "../ansible/hosts"
 }
