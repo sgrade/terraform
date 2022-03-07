@@ -18,10 +18,6 @@ data "aws_ami" "debian-11-amd64" {
 }
 
 // Virtual Machines to host BIRD
-data "template_file" "user_data" {
-  template = file("../scripts/bird.yaml")
-}
-
 resource "aws_instance" "router" {
   count                   = var.instance_count
   ami                     = data.aws_ami.debian-11-amd64.id
@@ -36,17 +32,11 @@ resource "aws_instance" "router" {
     {
       // First letter of the "Name" tag should be capital. 
       // Otherwise it will work as a tag, but won't show Name in AWS console
+      vm_index = "${count.index + 1}"
       Name = "router${count.index + 1}"
     },
     var.resource_tags
   )
-
-  /*
-  // Provisioner doesn't work yet. Need to configure connection: https://www.terraform.io/language/resources/provisioners/connection
-  provisioner "remote-exec" {
-    inline = ["sudo hostnamectl set-hostname $router${count.index + 1}"]
-  }
-  */
 }
 
 // Other types

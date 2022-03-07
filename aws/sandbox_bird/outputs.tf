@@ -25,6 +25,7 @@ resource "local_file" "routers_yml" {
           "hosts" = tomap({
             for inst in aws_instance.router:
             inst.public_dns => tomap({
+              "router_index" = inst.tags.vm_index
               "hostname" = inst.tags.Name
               "public_ip" = inst.public_ip
             })
