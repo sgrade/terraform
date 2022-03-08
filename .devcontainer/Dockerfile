@@ -19,6 +19,10 @@ RUN curl https://bootstrap.pypa.io/get-pip.py -o get-pip.py
 RUN python3 get-pip.py
 RUN python3 -m pip install ansible
 
+# The ipaddr filter requires python's netaddr be installed on the ansible controller
+RUN python3 -m pip install netaddr
+
+# AWS CLI
 RUN curl https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip -o awscliv2.zip \
   && unzip awscliv2.zip \
   && ./aws/install \

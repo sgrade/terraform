@@ -26,7 +26,11 @@ resource "aws_instance" "router" {
   vpc_security_group_ids  = [aws_security_group.sandbox_sg.id]
   key_name                = var.key_name
 
-  user_data               = data.template_file.user_data.rendered
+  // https://cloudinit.readthedocs.io/en/latest/topics/modules.html#set-hostname
+  user_data               = <<EOF
+#cloud-config
+  hostname: "router${count.index + 1}"
+EOF
 
   tags = merge(
     {
