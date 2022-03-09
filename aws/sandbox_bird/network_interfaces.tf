@@ -3,15 +3,24 @@
 // +++++++++++++++++++
 // Subnet between 1 and 2
 
+locals {
+    subnet_12_ips = [11, 22]
+}
+
 resource "aws_network_interface" "private_subnet_12" {
   count = 2
   subnet_id = aws_subnet.sandbox_private_subnet_12.id
 
   // The first four IP addresses and the last IP address in each subnet CIDR block are reserved
   // https://docs.aws.amazon.com/vpc/latest/userguide/VPC_Subnets.html#VPC_Sizing
-  private_ips = [cidrhost(aws_subnet.sandbox_private_subnet_12.cidr_block, 11 + count.index + count.index * 10)]
+  private_ips = [cidrhost(aws_subnet.sandbox_private_subnet_12.cidr_block, local.subnet_12_ips[count.index])]
 
-  tags = var.resource_tags
+  tags = merge(
+    {
+      internal = true
+    },
+    var.resource_tags
+  )
 }
 
 resource "aws_network_interface_attachment" "private_subnet_12_attachment" {
@@ -28,15 +37,24 @@ resource "aws_network_interface_attachment" "private_subnet_12_attachment" {
 // +++++++++++++++++++
 // Subnet between 2 and 3
 
+locals {
+    subnet_23_ips = [22, 33]
+}
+
 resource "aws_network_interface" "private_subnet_23" {
   count = 2
   subnet_id = aws_subnet.sandbox_private_subnet_23.id
 
   // The first four IP addresses and the last IP address in each subnet CIDR block are reserved
   // https://docs.aws.amazon.com/vpc/latest/userguide/VPC_Subnets.html#VPC_Sizing
-  private_ips = [cidrhost(aws_subnet.sandbox_private_subnet_23.cidr_block, 22 + count.index + count.index * 10)]
+  private_ips = [cidrhost(aws_subnet.sandbox_private_subnet_23.cidr_block, local.subnet_23_ips[count.index])]
 
-  tags = var.resource_tags
+  tags = merge(
+    {
+      internal = true
+    },
+    var.resource_tags
+  )
 }
 
 resource "aws_network_interface_attachment" "private_subnet_23_attachment" {
@@ -65,7 +83,12 @@ resource "aws_network_interface" "private_subnet_13" {
   // https://docs.aws.amazon.com/vpc/latest/userguide/VPC_Subnets.html#VPC_Sizing
   private_ips = [cidrhost(aws_subnet.sandbox_private_subnet_13.cidr_block, local.subnet_13_ips[count.index])]
 
-  tags = var.resource_tags
+  tags = merge(
+    {
+      internal = true
+    },
+    var.resource_tags
+  )
 }
 
 resource "aws_network_interface_attachment" "private_subnet_13_attachment_1" {

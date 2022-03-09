@@ -14,9 +14,7 @@ output "instance_public_ips" {
   })
 }
 
-
-// Ansible inventory in yaml format - needs some extra work
-// Allows to add variables
+// Ansible inventory in yaml format
 resource "local_file" "routers_yml" {
     content     = replace(
     yamlencode(
